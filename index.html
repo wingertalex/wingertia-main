@@ -214,52 +214,59 @@
     <script>
         // --- Script do Chat integrado com o Hugging Face Space ---
         async function enviarParaIA() {
-            const inputUsuario = document.getElementById("pergunta-usuario");
-            const historicoChat = document.getElementById("historico-chat");
-            const pergunta = inputUsuario.value.trim();
+    const inputUsuario = document.getElementById("pergunta-usuario");
+    const historicoChat = document.getElementById("historico-chat");
+    const pergunta = inputUsuario.value.trim();
 
-            if (!pergunta) return;
+    if (!pergunta) return;
 
-            // Insere input do usuário na tela
-            historicoChat.innerHTML += `<p><strong>Você:</strong> ${pergunta}</p>`;
-            inputUsuario.value = ""; 
-            historicoChat.scrollTop = historicoChat.scrollHeight; 
+    // Insere input do usuário na tela
+    historicoChat.innerHTML += `<p><strong>Você:</strong> ${pergunta}</p>`;
+    inputUsuario.value = ""; 
+    historicoChat.scrollTop = historicoChat.scrollHeight; 
 
-            // Estado visual de processamento
-            const IDMensagemPensando = "pensando-" + Date.now();
-            historicoChat.innerHTML += `<p id="${IDMensagemPensando}"><em>Buscando resposta...</em></p>`;
-            historicoChat.scrollTop = historicoChat.scrollHeight;
+    // Estado visual de processamento
+    const IDMensagemPensando = "pensando-" + Date.now();
+    historicoChat.innerHTML += `<p id="${IDMensagemPensando}"><em>Buscando resposta...</em></p>`;
+    historicoChat.scrollTop = historicoChat.scrollHeight;
 
-            const urlAPI = "https://alexwingert-minha-ia-api.hf.space/pergunta"; 
+    const urlAPI = "https://alexwingert-minha-ia-api.hf.space/pergunta"; 
 
-            try {
-                const response = await fetch(urlAPI, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ prompt: pergunta })
-                });
+    try {
+        const response = await fetch(urlAPI, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt: pergunta })
+        });
 
-                const resultado = await response.json();
-                
-                document.getElementById(IDMensagemPensando).remove();
+        const resultado = await response.json();
+        
+        // Remove o estado de carregamento
+        const elementoPensando = document.getElementById(IDMensagemPensando);
+        if (elementoPensando) elementoPensando.remove();
 
-                if (resultado.resposta) {
-                    historicoChat.innerHTML += `<p><strong>Sua IA:</strong> ${resultado.resposta}</p>`;
-                } else if (resultado.erro) {
-                    historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro interno:</strong> ${resultado.erro}</p>`;
-                }
-                
-            } catch (error) {
-                console.error("Erro na requisição à API:", error);
-                const elementoPensando = document.getElementById(IDMensagemPensando);
-                if (elementoPensando) elementoPensando.remove();
-                historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro de Rede:</strong> Não foi possível obter resposta do servidor da IA.</p>`;
-            }
-
-            historicoChat.scrollTop = historicoChat.scrollHeight; 
+        // Trata a resposta de forma segura para evitar o [object Object]
+        if (resultado.resposta) {
+            historicoChat.innerHTML += `<p><strong>Sua IA:</strong> ${resultado.resposta}</p>`;
+        } else if (resultado.erro) {
+            // Se o erro for um objeto, transforma em texto legível, senão usa o texto direto
+            const textoErro = typeof resultado.erro === 'object' ? JSON.stringify(resultado.erro) : resultado.erro;
+            historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro interno:</strong> ${textoErro}</p>`;
+        } else {
+            historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro interno:</strong> Resposta inesperada do servidor.</p>`;
         }
+        
+    } catch (error) {
+        console.error("Erro na requisição à API:", error);
+        const elementoPensando = document.getElementById(IDMensagemPensando);
+        if (elementoPensando) elementoPensando.remove();
+        historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro de Rede:</strong> Não foi possível obter resposta do servidor da IA.</p>`;
+    }
+
+    historicoChat.scrollTop = historicoChat.scrollHeight; 
+}
 
         // Listener para disparar o envio ao pressionar a tecla Enter
         document.getElementById("pergunta-usuario").addEventListener("keypress", function(event) {
