@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WingertIA — tecnologia, automação e inteligência artificial.">
     <title>WingertIA</title>
-    
-    <!-- Ajustado o Content-Security-Policy para permitir conexão externa com o Hugging Face (connect-src) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src 'https://fonts.gstatic.com'; connect-src https://alexwingert-minha-ia-api.hf.space;">
-    
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+
     <style>
         :root {
             --glow-color: #00f2fe;
             --bg-dark: #050811;
-            --chat-bg: rgba(10, 16, 32, 0.75);
-            --chat-border: rgba(0, 242, 254, 0.3);
         }
 
         * {
@@ -28,13 +26,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Estético: impede scroll de barras laterais indesejadas */
+            overflow: hidden;
             position: relative;
             cursor: default;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Canvas para a animação interativa com o mouse */
         #interactive-canvas {
             position: absolute;
             top: 0;
@@ -50,19 +47,16 @@
             position: relative;
             text-align: center;
             width: 100%;
-            max-width: 650px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
         }
 
-        /* Fonte Moderna, Minimalista e Futurista */
         h1 {
             font-size: 4rem;
             font-weight: 800;
-            letter-spacing: -1px; /* Estilo moderno de tracking mais junto */
+            letter-spacing: -1px;
             color: #ffffff;
             text-shadow: 0 0 15px rgba(0, 242, 254, 0.6), 0 0 30px rgba(0, 242, 254, 0.2);
             animation: pulseGlow 4s ease-in-out infinite alternate;
@@ -70,7 +64,6 @@
             user-select: none;
         }
 
-        /* O Cursor Piscando Clássico de Terminal/Tech */
         h1::after {
             content: '_';
             color: var(--glow-color);
@@ -79,99 +72,8 @@
             text-shadow: 0 0 10px var(--glow-color);
         }
 
-        /* --- Custom UI do Chat WingertIA --- */
-        .chat-wrapper {
-            width: 100%;
-            background: var(--chat-bg);
-            border: 1px solid var(--chat-border);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            text-align: left;
-        }
-
-        #historico-chat {
-            height: 280px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding-right: 5px;
-        }
-
-        #historico-chat p {
-            color: #e0e6ed;
-            margin-bottom: 12px;
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-
-        #historico-chat strong {
-            color: var(--glow-color);
-            text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
-        }
-
-        #historico-chat em {
-            color: #8892b0;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        #pergunta-usuario {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 6px;
-            padding: 12px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        #pergunta-usuario:focus {
-            border-color: var(--glow-color);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-        }
-
-        #btn-enviar {
-            background: transparent;
-            border: 1px solid var(--glow-color);
-            color: #fff;
-            padding: 0 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px var(--glow-color);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
-        }
-
-        #btn-enviar:hover {
-            background: var(--glow-color);
-            color: var(--bg-dark);
-            box-shadow: 0 0 15px var(--glow-color);
-            text-shadow: none;
-        }
-
-        /* Custom Scrollbar para combinar com o tema */
-        #historico-chat::-webkit-scrollbar {
-            width: 4px;
-        }
-        #historico-chat::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #historico-chat::-webkit-scrollbar-thumb {
-            background: var(--chat-border);
-            border-radius: 10px;
-        }
-
         @keyframes blink {
-            from, to { color: transparent }
+            from, to { color: transparent; }
             50% { color: var(--glow-color); }
         }
 
@@ -187,105 +89,35 @@
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 2.8rem; letter-spacing: -0.5px; }
-            .content { padding: 10px; }
+            h1 {
+                font-size: 2.8rem;
+                letter-spacing: -0.5px;
+            }
+
+            .content {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-
     <canvas id="interactive-canvas"></canvas>
 
-    <div class="content" role="main" aria-label="Portal de apresentação WingertIA">
+    <main class="content" aria-label="Portal de apresentação WingertIA">
         <h1>WingertIA</h1>
-
-        <!-- Interface de Conversa Integrada -->
-        <div class="chat-wrapper">
-            <div id="historico-chat">
-                <p><strong>Sua IA:</strong> Conexão estabelecida. Como posso te ajudar hoje?</p>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="pergunta-usuario" placeholder="Digite sua instrução ou pergunta..." autocomplete="off">
-                <button id="btn-enviar" onclick="enviarParaIA()">Enviar</button>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <script>
-        // --- Script do Chat integrado com o Hugging Face Space ---
-        async function enviarParaIA() {
-    const inputUsuario = document.getElementById("pergunta-usuario");
-    const historicoChat = document.getElementById("historico-chat");
-    const pergunta = inputUsuario.value.trim();
-
-    if (!pergunta) return;
-
-    // Insere input do usuário na tela
-    historicoChat.innerHTML += `<p><strong>Você:</strong> ${pergunta}</p>`;
-    inputUsuario.value = ""; 
-    historicoChat.scrollTop = historicoChat.scrollHeight; 
-
-    // Estado visual de processamento
-    const IDMensagemPensando = "pensando-" + Date.now();
-    historicoChat.innerHTML += `<p id="${IDMensagemPensando}"><em>Buscando resposta...</em></p>`;
-    historicoChat.scrollTop = historicoChat.scrollHeight;
-
-    const urlAPI = "https://alexwingert-minha-ia-api.hf.space/pergunta"; 
-
-    try {
-        const response = await fetch(urlAPI, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ prompt: pergunta })
-        });
-
-        const resultado = await response.json();
-        
-        // Remove o estado de carregamento
-        const elementoPensando = document.getElementById(IDMensagemPensando);
-        if (elementoPensando) elementoPensando.remove();
-
-        // Trata a resposta de forma segura para evitar o [object Object]
-        if (resultado.resposta) {
-            historicoChat.innerHTML += `<p><strong>Sua IA:</strong> ${resultado.resposta}</p>`;
-        } else if (resultado.erro) {
-            // Se o erro for um objeto, transforma em texto legível, senão usa o texto direto
-            const textoErro = typeof resultado.erro === 'object' ? JSON.stringify(resultado.erro) : resultado.erro;
-            historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro interno:</strong> ${textoErro}</p>`;
-        } else {
-            historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro interno:</strong> Resposta inesperada do servidor.</p>`;
-        }
-        
-    } catch (error) {
-        console.error("Erro na requisição à API:", error);
-        const elementoPensando = document.getElementById(IDMensagemPensando);
-        if (elementoPensando) elementoPensando.remove();
-        historicoChat.innerHTML += `<p style="color: #ff4a4a;"><strong>Erro de Rede:</strong> Não foi possível obter resposta do servidor da IA.</p>`;
-    }
-
-    historicoChat.scrollTop = historicoChat.scrollHeight; 
-}
-
-        // Listener para disparar o envio ao pressionar a tecla Enter
-        document.getElementById("pergunta-usuario").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                enviarParaIA();
-            }
-        });
-
-        // --- Animação do Canvas Interativo (Preservado o código original) ---
         const canvas = document.getElementById('interactive-canvas');
         const ctx = canvas.getContext('2d');
         let particlesArray = [];
-        const maxDistance = 100; 
+        const maxDistance = 100;
 
         const mouse = {
             x: null,
             y: null,
-            radius: 150 
-        }
+            radius: 150
+        };
 
         window.addEventListener('mousemove', function(event) {
             mouse.x = event.x;
@@ -318,12 +150,14 @@
                 this.size = size;
                 this.color = color;
             }
+
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
                 ctx.fill();
             }
+
             update() {
                 this.x += this.directionX;
                 this.y += this.directionY;
@@ -332,17 +166,18 @@
                 if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
 
                 if (mouse.x !== null && mouse.y !== null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+
                     if (Math.abs(dx) < mouse.radius && Math.abs(dy) < mouse.radius) {
-                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < mouse.radius) {
                             this.x += dx * 0.03;
                             this.y += dy * 0.03;
                         }
                     }
                 }
+
                 this.draw();
             }
         }
@@ -350,15 +185,15 @@
         function init() {
             particlesArray = [];
             let numberOfParticles = (canvas.width * canvas.height) / 9000;
-            numberOfParticles = Math.min(numberOfParticles, 120); 
+            numberOfParticles = Math.min(numberOfParticles, 120);
 
             for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((window.innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((window.innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
-                let color = 'rgba(0, 242, 254, 0.4)';
+                const size = (Math.random() * 2) + 1;
+                const x = Math.random() * (window.innerWidth - size * 4) + size * 2;
+                const y = Math.random() * (window.innerHeight - size * 4) + size * 2;
+                const directionX = (Math.random() * 1) - 0.5;
+                const directionY = (Math.random() * 1) - 0.5;
+                const color = 'rgba(0, 242, 254, 0.4)';
 
                 particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
@@ -366,14 +201,15 @@
 
         function connect() {
             let opacityValue = 1;
+
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
-                    let dx = particlesArray[a].x - particlesArray[b].x;
-                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    const dx = particlesArray[a].x - particlesArray[b].x;
+                    const dy = particlesArray[a].y - particlesArray[b].y;
 
                     if (Math.abs(dx) > maxDistance || Math.abs(dy) > maxDistance) continue;
 
-                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < maxDistance) {
                         opacityValue = 1 - (distance / maxDistance);
@@ -387,11 +223,11 @@
                 }
 
                 if (mouse.x !== null && mouse.y !== null) {
-                    let dxMouse = mouse.x - particlesArray[a].x;
-                    let dyMouse = mouse.y - particlesArray[a].y;
+                    const dxMouse = mouse.x - particlesArray[a].x;
+                    const dyMouse = mouse.y - particlesArray[a].y;
 
                     if (Math.abs(dxMouse) < mouse.radius && Math.abs(dyMouse) < mouse.radius) {
-                        let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+                        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
 
                         if (distMouse < mouse.radius) {
                             opacityValue = 1 - (distMouse / mouse.radius);
@@ -408,17 +244,17 @@
         }
 
         function animate() {
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].update();
             }
+
             connect();
             requestAnimationFrame(animate);
         }
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        init();
+        resizeCanvas();
         animate();
     </script>
 </body>
