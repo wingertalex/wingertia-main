@@ -6,7 +6,7 @@
     <meta name="description" content="WingertIA — tecnologia, automação e inteligência artificial.">
     <title>WingertIA</title>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' https://hits.sh data:;">
 
     <style>
         :root {
@@ -72,6 +72,26 @@
             text-shadow: 0 0 10px var(--glow-color);
         }
 
+        .visit-counter {
+            position: fixed;
+            right: 14px;
+            bottom: 10px;
+            z-index: 2;
+            opacity: 0.32;
+            transition: opacity 0.25s ease;
+            line-height: 0;
+        }
+
+        .visit-counter:hover {
+            opacity: 0.65;
+        }
+
+        .visit-counter img {
+            height: 18px;
+            width: auto;
+            filter: grayscale(1);
+        }
+
         @keyframes blink {
             from, to { color: transparent; }
             50% { color: var(--glow-color); }
@@ -97,6 +117,11 @@
             .content {
                 padding: 10px;
             }
+
+            .visit-counter {
+                right: 8px;
+                bottom: 7px;
+            }
         }
     </style>
 </head>
@@ -106,6 +131,10 @@
     <main class="content" aria-label="Portal de apresentação WingertIA">
         <h1>WingertIA</h1>
     </main>
+
+    <div class="visit-counter" aria-label="Contador de visitas" title="Visitas">
+        <img src="https://hits.sh/wingertia.com.br.svg?style=flat&label=visitas&color=111827&labelColor=111827" alt="Contador de visitas">
+    </div>
 
     <script>
         const canvas = document.getElementById('interactive-canvas');
